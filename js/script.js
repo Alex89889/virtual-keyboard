@@ -14,6 +14,7 @@ class Keyboard {
 
     this.properties = {
       value: '',
+      id: '',
       capsLock: false,
     };
 
@@ -61,12 +62,16 @@ class Keyboard {
   }
 
   createKeys() {
+    const CAPS_LOCK_BUTTON_TITLE = 'CapsLock';
+    const ENTER_BUTTON_TITLE = 'Enter';
+    const SPACE_BUTTON_TITLE = 'Space';
+    const TAB_BUTTON_TITLE = 'Tab';
+    const SHIFT_BUTTON_TITLE = 'Shift';
     const fragment = document.createDocumentFragment();
     // check lunguage
-    const lung = document.getElementById('lung').value;
-    if (lung === 'Eng') {
+    if (localStorage.getItem('lunguage') === 'Eng') {
       this.keyLayout = this.keyLayoutEng;
-    } else if (lung === 'Rus') {
+    } else if (localStorage.getItem('lunguage') === 'Rus') {
       this.keyLayout = this.keyLayoutRussian;
     } else {
       this.keyLayout = this.keyLayoutEng;
@@ -79,6 +84,8 @@ class Keyboard {
       // Add attributes/classes
       keyElement.setAttribute('type', 'button');
       keyElement.classList.add('keyboard__key');
+      keyElement.classList.add('animated');
+      keyElement.id = key;
 
       switch (key) {
         case 'Backspace':
@@ -92,7 +99,7 @@ class Keyboard {
 
           break;
 
-        case 'CapsLock':
+        case CAPS_LOCK_BUTTON_TITLE:
           keyElement.classList.add('keyboard__key--wide', 'keyboard__key--activatable');
           keyElement.textContent = key;
 
@@ -103,7 +110,7 @@ class Keyboard {
 
           break;
 
-        case 'Enter':
+        case ENTER_BUTTON_TITLE:
           keyElement.classList.add('keyboard__key--wide');
           keyElement.textContent = key;
 
@@ -114,7 +121,7 @@ class Keyboard {
 
           break;
 
-        case 'Space':
+        case SPACE_BUTTON_TITLE:
           keyElement.classList.add('keyboard__key--extra-wide');
           keyElement.textContent = ' ';
 
@@ -125,7 +132,7 @@ class Keyboard {
 
           break;
 
-        case 'Tab':
+        case TAB_BUTTON_TITLE:
           keyElement.classList.add('keyboard__key--wide');
           keyElement.textContent = key;
 
@@ -136,7 +143,7 @@ class Keyboard {
 
           break;
 
-        case 'Shift':
+        case SHIFT_BUTTON_TITLE:
           keyElement.classList.add('keyboard__key--wide');
           keyElement.textContent = key;
 
@@ -204,11 +211,14 @@ class Keyboard {
 
   clickKey(event) {
     if (event.ctrlKey && event.altKey) {
-      const countLung = document.getElementById('lung').value;
+      const countLung = localStorage.getItem('lunguage');
+
       if (countLung === 'Eng') {
-        document.getElementById('lung').value = 'Rus';
+        localStorage.setItem('lunguage', 'Rus');
       } else if (countLung === 'Rus') {
-        document.getElementById('lung').value = 'Eng';
+        localStorage.setItem('lunguage', 'Eng');
+      } else {
+        localStorage.setItem('lunguage', 'Rus');
       }
       const node = document.querySelector('.keyboard');
       node.parentNode.removeChild(node);
@@ -216,10 +226,11 @@ class Keyboard {
       this.init();
       document.getElementById('textarea-keyboard').focus();
     }
+
     const elements = document.querySelectorAll('button');
     elements.forEach((elem) => {
       if (event.key === elem.textContent || event.code === elem.textContent) {
-        elem.style.backgroundColor = 'black';
+        elem.id = 'black';
       }
     });
   }
@@ -228,7 +239,7 @@ class Keyboard {
     const elements = document.querySelectorAll('button');
 
     elements.forEach((elem) => {
-      elem.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+      elem.removeAttribute('id');
     });
   }
 
